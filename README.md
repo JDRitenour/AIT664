@@ -1,63 +1,68 @@
-### Using Thematic Analyis and Sentiment Analysis to Predict Categorical Variables - Deliverable 1
+### Using Thematic Analyis and Sentiment Analysis to Predict Categorical Variables
 
-#### Focus Area
+#### Project Overview and Hypothesis
 
-<p>For this project, I would like to explore what kind of knowledge can be gained from free-form text. When discussing data analytics, and specifically data visualizations, Natural Language Processing (NLP) is often left out of the conversation. This is because it can be very difficult to glean information from free-form text responses and convert that information into actionable knowledge. If a data analyst can develop their Natural Language Processing skills, however, they can be an asset to their team. When Natural Language Processing is done well, it can provide the decision maker with a clear understanding of either what is or is not working depending on the context of the review.</p>
+<p>The goal of this project was to expand my abilities in analyzing qualitative data, specifically free-form text responses. Using Kaggle, I found a dataset that consists of approximately 42,000 free-form text reviews of three Disneyland parks that were webscrapped from the Trip Advisor website. My hypothesis was that I could use thematic analysis and sentiment analysis to create a K Nearest Neighbors model that could predict an associated categorical ranking assigned by the reviewer with reasonable accuracy.</p>
 
-<p>In an effort to develop my Natural Language Processing skills, I will be using topic modeling, word frequency analysis, and sentiment analysis to glean information from free-from text responses. Once the information has been extracted, it can be summarized in visualizations that are utilized to internalize the information and produce knowledge.</p>
+#### Analysis Overview
 
-#### Dataset
+<p>My analysis was completed in five main steps: Exploratory Data Analysis, Data Cleaning, Thematic Analysis & Sentiment Analysis, Preprocessing, and Modeling.</p>
 
-<p>I have found a dataset on Kaggle that consists of 42,000 free-from text reviews of Disneyland California, Disneyland Paris, a Dinseyland Hong Kong that were webscrapped from Trip Advisor. Having grown up in Florida, most of my family vacations included a stop at the one and only Disney World park. However, I have never visited a Disneyland park. I am curious about what I can learn from the experiences of other visitors.</p>
+#### Exploratory Data Analysis
 
-<p>
-The dataset consists of 6 variables that will assist in performing this analysis.
-<ol>
-  <li>The <strong>Review_ID</strong> variable is a unique numeric identifier that is assigned to each review./li>
-  <li>The <strong>Rating</strong> variable is a categorical variable that is represented by a numeric value. The table below provides the definition of each category.</br>
-<table width = "100%">
-  <tr>
-    <td align = "center" width = "20%">5</td>
-    <td align = "center" width = "20%">4</td>
-    <td align = "center" width = "20%">3</td>
-    <td align = "center" width = "20%">2</td>
-    <td align = "center" width = "20%">1</td>
-  </tr>
-  <tr>
-    <td align = "center" width = "20%">Satisfied</td>
-    <td align = "center" width = "20%">Somewhat Satisfied</td>
-    <td align = "center" width = "20%">Neutral</td>
-    <td align = "center" width = "20%">Somewhat Unsatisfied</td>
-    <td align = "center" width = "20%">Unsatisfied</td>
-  </tr>
-</table>
-</li>
-<li>The <strong>Year_Month</strong> variable indicates the year and the month that the review was posted on. This variable can be used to complete a time series analysis to see how the topics and the sentiment of the reviews change over time. It can also be used to set a baseline that can be used to compare new reviews against as tehy come in.</li>
-  <li>The <strong>Reviewer_Location</strong> variable indicates the reviewer's country of origin. This can be used to compare topics and sentiment across different countries and regions.</li>
-  <li>The <strong>Review_Text</strong> variable is the actual review left by the reviewer. It will be used for sentiment ana analysis, topic modeling, and word frequency analysis.</li>
-  <li>Lastly, the <strong>Branch</strong> variable indicates the Disneyland branch that the review was left on.</li>
-</ol>
+<p>The dataset from Kaggle consisted of approximately 42,000 records and 6 variables. Only two of the six variables included in the dataset, Rating and Review_Text, were relevant for the purposes of the analysis. Rating is a categorical variable that the reviewer picked when submitting their review on the Trip Advisor website where a 1 indicates that the visit was unsatisfactory and a 5 indicates that the visit was satisfactory.</p>
+
+<p align="center">
+<img width="400" alt="figure 1" src="https://github.com/JDRitenour/GMU-AIT664/assets/78283026/05249c41-f451-4323-8e21-facabc652134"><br />
+Fig 1: Vertical Bar Chart of the Number of Reviews per Rating generated using Matplotlib in Python
 </p>
 
-<p>At first glance, the dataset appears to be very clean and well structured. Since this analysis will rely on Natural Language Processing, care will need to be taken during pre-processing to remove text that will not be beneficial to the analysis like special characters.</p>
+<p>The Review_Text variable is the free-form text review that was written by the reviewer. The Rating variable was the target variable for the K Nearest Neighbor Model. Therefore, it was important to explore the distribution of the Rating variable across the dataset. Figure 1 above shows the distribution of the Rating Variable. From the graph, it is clear that the dataset contains an uneven distribution of the target variable with over half of the dataset containing a Rating of 5. This tells the modeler that they will need to take steps to even out the distribution of the target variable during preprocessing.</p>
 
-#### Initial Requirements
+#### Data Cleaning
 
-<p>This type of analysis could be utilized by the decision makers within the Disney organization. Free-form text responses allow decision makers to hear directly from the customer. Decision makers can use that information to reinforce what is working or as a starting point to launch initiatives to fix what is not.</p>
+<p>To clean the data for this analysis, the dataset needed to be evaluated for missing values and duplicate values prior to performing the thematic analysis and the sentiment analysis. One of the challenges I ran into when evaluating the dataset for missing values is that the owner of the Kaggle dataset had imputed the null values with the string ‘missing’. This means when I searched the dataset for null values using the pandas isnull() function it returned no missing values. However, upon further exploration I discovered the use of the ‘missing’ value and used that to remove records with missing values from the dataset. The next goal was to remove duplicate values from the dataset. I used the drop_duplicates() function from pandas to remove the duplicate rows from the dataset. Prior to removing duplicate rows and rows with missing values, the dataset contained 42,656 records. After removing duplicate rows and rows with missing values, the dataset consisted of 40,014 records that would be used to generate data for the model.</p>
 
-<p>My goal for this project is to explore the following questions:
-<ul>
-  <li>What are the top 5 topics mentioned in the reviews?</li>
-  <li>How do the top 5 topics change based on the region the reviewer originates from, the numerical ranking associated with the review, and the park that the reviewer visited?</li>
-  <li>How does the word frequency of review change based on the region the review originates from, the numerical ranking associated with the review, and the park that the reviewer visited?</li>
-  <li>How does the sentiment of a review change based on the region the review originates from, the numerical ranking associated with the review, and the park that the reviewer visited?</li>
-  <li>How does the top 5 topics, the word frequency or the sentiment change year over year or month over month?</li>
-  <li>Does the sentiment of a review correlate with the numerical ranking?</li>
-</ul></p>
+#### Thematic Analysis & Sentiment Analysis
 
-#### Hypothesis
+<p align="center">
+<img width="400" alt="figure 2" src="https://github.com/JDRitenour/GMU-AIT664/assets/78283026/5902814f-b8f4-4b65-8335-8d47a0c0bb61"><br />
+Fig 2: Unstacked Vertical Bar Chart of the number of Reviews per Rating and Dominant Theme generated using Seaborn in Python
+</p>
 
-<p>My hypothesis for this analysis is that using topic modeling we will be able to identify opportunities to improve the visitor experience in an attempt to reduce negative reviews in the future. I believe that we will be able to determine differences in topics and sentiments based on the date the review was left and the origin location of the reviewer. Lastly, I believe that we will see a correlation between the ranking variable and the sentiment of the review.</p>
+<p>To generate data for the K Nearest Neighbor Model, I performed a thematic analysis and a sentiment analysis on the Review_Text column. For the thematic analysis, I used the LatentDirichletAllocation() model from Scikit-Learn to generate the five themes based on the dataset, and then evaluated each individual review to determine how much each review fit into each theme. The theme with the highest percentage match was then determined to be the review's dominant theme. Figure 2 above shows the distribution of the dominant themes across the dataset broken down by the Rating variable.</p>
+
+<p>Next, I used the SentimentIntensityAnalyzer() model from NLTK to determine the amount of positive sentiment, neutral sentiment, and negative sentiment in each review. The SentimentIntensityAnalyzer() model also provides a sentiment compound score where -1 means the record is completely negative and +1 means the record is completely positive. The histogram in Figure 3 below shows the distribution of sentiment across the dataset which shows that the dataset is skewed positive. This is consistent with the findings in Figure 1 that shows that most of the reviews have a Rating of 5.</p>
+
+<p align="center">
+<img width="400" alt="figure 3" src="https://github.com/JDRitenour/GMU-AIT664/assets/78283026/be1b252c-2cd9-41af-a3b6-5e611e3e59d9"><br />
+Fig 3: A Histogram of the Sentiment Score of the Reviews generated using Matplotlib in Python
+</p>
+
+#### Preprocessing
+
+<p>The next step of the analysis was to clean the new data created by the thematic analysis and the sentiment analysis, as well as preprocess the data for the model. To clean the data created by the thematic analysis and the sentiment analysis, I focused on removing outliers and multicollinearity from within the dataset. Removing outliers and multicollinearity is important because it removes noise from the dataset that can skew the results of a model.</p>
+
+<p>To preprocess the data for modeling, I applied resampling techniques to even the distribution of the dataset. Ultimately, I used the resample() function from Scikit-Learn to apply an oversampling technique to increase the records in Ratings 1 - 4. Figure 4 below shows the distribution of the dataset after resampling.</p>
+![figure4](https://github.com/JDRitenour/GMU-AIT664/assets/78283026/391e6c91-adc4-4e9c-a9b3-4d6d8812a040)
+
+<p align="center">
+<img width="400" alt="figure 4" src="https://github.com/JDRitenour/GMU-AIT664/assets/78283026/391e6c91-adc4-4e9c-a9b3-4d6d8812a040"><br />
+Fig 4: A Bar Chart that shows the distribution of classes after Resampling was applied generated using Matplotlib in Python
+</p>
+
+#### Modeling
+
+<p>For my model, I built a k nearest neighbors model to try to predict the categorical Ranking associated with each review. To find the optimal k for the model, I ran the model on a range of k values from 1 to 50 (the results for each of these models can be seen in figure 5 below). I used k-fold cross-validation with k defined as 5. This means that the dataset was split into training and test sets 5 times using different data for each of the splits. The model is run on each of the splits and then the results are average together to get the results of the model. This process was performed for each value of k.</p>
+
+#### Model Accuracy
+
+<p align="center">
+<img width="600" alt="figure 5" src="https://github.com/JDRitenour/GMU-AIT664/assets/78283026/50395e05-0123-423b-b8be-11509af75919"><br />
+Fig 5: A Line Plot showing the Accuracy for each K Value generated using Seaborn in Python
+</p>
+
+<p>Figure 5 above shows the accuracy score for each of the k values tested on the model. The optimal value for k was found to be 37 which produced an accuracy score of 60.5% My hypothesis was that a k-nearest-neighbor model could use data generated from a thematic analysis and a sentiment analysis to predict an associated categorical variable with reasonable accuracy. In order to evaluate the performance of my hypothesis, the definition of reasonable accuracy must be determined. An acceptable accuracy level for a model can vary widely depending on the model topic. However, generally models are considered reasonably accurate about 70%. Therefore, my model with an accuracy score of 60.5% did not predict the associated categorical variable with reasonable accuracy. Therefore, my hypothesis is incorrect.</p>
 
 #### References
 
