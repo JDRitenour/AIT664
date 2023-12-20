@@ -44,7 +44,6 @@ Fig 3: A Histogram of the Sentiment Score of the Reviews generated using Matplot
 <p>The next step of the analysis was to clean the new data created by the thematic analysis and the sentiment analysis, as well as preprocess the data for the model. To clean the data created by the thematic analysis and the sentiment analysis, I focused on removing outliers and multicollinearity from within the dataset. Removing outliers and multicollinearity is important because it removes noise from the dataset that can skew the results of a model.</p>
 
 <p>To preprocess the data for modeling, I applied resampling techniques to even the distribution of the dataset. Ultimately, I used the resample() function from Scikit-Learn to apply an oversampling technique to increase the records in Ratings 1 - 4. Figure 4 below shows the distribution of the dataset after resampling.</p>
-![figure4](https://github.com/JDRitenour/GMU-AIT664/assets/78283026/391e6c91-adc4-4e9c-a9b3-4d6d8812a040)
 
 <p align="center">
 <img width="400" alt="figure 4" src="https://github.com/JDRitenour/GMU-AIT664/assets/78283026/391e6c91-adc4-4e9c-a9b3-4d6d8812a040"><br />
