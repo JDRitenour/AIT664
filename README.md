@@ -29,6 +29,8 @@ This repository contains one juptyer notebook with the code pertaining to the an
 
 ## Results<a name="results"></a>
 
+The results of my analysis showed that my hypothesis was incorrect. The k nearest neighbors model produced an accuracy of approximately 60%. A deeper review of this analysis can be found <a href="https://jdritenour.github.io/GMU-AIT664/">here</a>.
+
 ## Licensing, Authors, Acknowledgements<a name="licensing"></a>
 
 This data was uploaded to Kaggle by Arush Chillar and can be accessed <a href="https://www.kaggle.com/datasets/arushchillar/disneyland-reviews">here</a>. 
